@@ -5,10 +5,11 @@ from base64 import b64encode, b64decode
 import json
 
 BLOCK_SIZE = 16
+LEN_BYTES = 32
 
-def generateKey(len_bytes = 32):
+def generateKey():
     #generating key and saving it to file
-    key = get_random_bytes(len_bytes)
+    key = get_random_bytes(LEN_BYTES)
     params = json.dumps({'key': b64encode(key).decode('utf-8')})
     with open("key.json", 'w') as file_o:
         json.dump(params, file_o)
