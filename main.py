@@ -1,7 +1,9 @@
 import os
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
-from credential_manager import credential_input, credential_loader
+from util.credential_manager import credential_input, credential_loader
+from util.MyAES import encryptText, decryptText, generateKey, loadKey
+from util.MyHash import hashText
 
 """
 Error Codes:

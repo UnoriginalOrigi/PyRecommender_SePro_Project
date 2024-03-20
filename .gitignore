@@ -1,3 +1,5 @@
-*.txt
+client_info.txt
 .cache
 /__pycache__
+*.json
+test*
