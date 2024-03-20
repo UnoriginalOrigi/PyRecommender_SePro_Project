@@ -1,23 +1,21 @@
 import os
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
-from util.credential_manager import credential_input, credential_loader
-from util.MyAES import encryptText, decryptText, generateKey, loadKey
+from util.MyAES import generateKey, loadKey
 from util.MyHash import hashText
+from util.credential_manager import credential_input, credential_loader
 
 """
 Error Codes:
 1. Expected integer, received invalid input
-2. Input is too long, possible overflow
-3.
-
+2. Input is incorrect length, possible overflow
+3. Invalid characters provided
 """
 
 def cls(): #command line clearing, purely estetic
     os.system('cls' if os.name=='nt' else 'clear')
 
 def action_input():
-    print("Choose your action:\n1. Login\n0. Quit")
     try:
         action = int(input())
     except (ValueError, EOFError):
@@ -30,6 +28,7 @@ def action_input():
 def main():
     print("Welcome to the Spotify Recommender Prototype!")
     while(True):
+        print("Choose your action:\n1. Login\n0. Quit")
         action = action_input()
         if action == 0:
             print("Program end!")
@@ -54,7 +53,9 @@ def main():
                 cls()
                 client_id, client_secret = credential_input()
             try:
-                sp = spotipy.Spotify(auth_manager=SpotifyClientCredentials(client_id=client_id,client_secret=client_secret))
+                auth_manager = SpotifyClientCredentials(client_id=client_id,client_secret=client_secret)
+                auth_manager.get_access_token(as_dict=False) #test to see if login was successful
+                sp = spotipy.Spotify(auth_manager=auth_manager)
                 search_query = input("Login successful, enter search query: ")
                 results = sp.search(q=search_query, limit=20)
                 for idx, track in enumerate(results['tracks']['items']):
