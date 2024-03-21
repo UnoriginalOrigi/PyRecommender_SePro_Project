@@ -27,6 +27,10 @@ def action_input():
 
 def main():
     print("Welcome to the Spotify Recommender Prototype!")
+    if not os.path.exists("key.json"):
+        params = generateKey()
+    else: 
+        params = loadKey()
     while(True):
         print("Choose your action:\n1. Login\n0. Quit")
         action = action_input()
@@ -41,17 +45,17 @@ def main():
                     if input_action == 'y':
                         cls()
                         print("Using saved credentials")
-                        client_id, client_secret = credential_loader()
+                        client_id, client_secret = credential_loader(params=params)
                         break
                     elif input_action == 'n':
                         cls()
-                        client_id, client_secret = credential_input()
+                        client_id, client_secret = credential_input(params=params)
                         break
                     else:
                         print("Invalid input")
             else:
                 cls()
-                client_id, client_secret = credential_input()
+                client_id, client_secret = credential_input(params=params)
             try:
                 auth_manager = SpotifyClientCredentials(client_id=client_id,client_secret=client_secret)
                 auth_manager.get_access_token(as_dict=False) #test to see if login was successful

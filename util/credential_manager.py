@@ -5,7 +5,7 @@ from getpass import getpass
 EXPECTED_INPUT_LENGTH = 32
 BASE62_INVALID_SYMBOLS = "[^A-Za-z0-9]"
 
-def credential_input():
+def credential_input(params):
     try:
         print("Input your client id token:")
         client_id_input = input()
@@ -17,8 +17,11 @@ def credential_input():
         client_secret_input = getpass()
         if len(client_secret_input) != EXPECTED_INPUT_LENGTH:
             raise OverflowError
+        if re.findall(BASE62_INVALID_SYMBOLS,client_secret_input):
+            raise ValueError
+        client_secret_enc = encryptText(data = client_secret_input, params=params)
         with open("client_info.txt","w") as f:
-            f.write("{}\n{}".format(client_id_input,client_secret_input))
+            f.write("{}\n{}".format(client_id_input,client_secret_enc))
         client_id = client_id_input
         client_secret = client_secret_input
     except OverflowError:
@@ -32,10 +35,11 @@ def credential_input():
     
     return client_id, client_secret
 
-def credential_loader():
+def credential_loader(params):
     with open("client_info.txt","r") as f:
         client_id = f.readline()
         client_id = client_id.strip()
         client_secret = f.readline()
         client_secret = client_secret.strip()
+        client_secret = decryptText(client_secret, params=params)
     return client_id, client_secret
