@@ -1,5 +1,6 @@
 from util.MyAES import encryptText, decryptText
 import re
+from getpass import getpass
 
 EXPECTED_INPUT_LENGTH = 32
 BASE62_INVALID_SYMBOLS = "[^A-Za-z0-9]"
@@ -13,7 +14,7 @@ def credential_input():
         if re.findall(BASE62_INVALID_SYMBOLS,client_id_input):
             raise ValueError
         print("Input your client secret token:")
-        client_secret_input = input()
+        client_secret_input = getpass()
         if len(client_secret_input) != EXPECTED_INPUT_LENGTH:
             raise OverflowError
         with open("client_info.txt","w") as f:
