@@ -2,8 +2,10 @@ from util.MyAES import encryptText, decryptText
 import re
 from getpass import getpass
 
+#input validation constants
 EXPECTED_INPUT_LENGTH = 32
 BASE62_INVALID_SYMBOLS = "[^A-Za-z0-9]"
+MAXIMUM_INPUT_LENGTH = 100
 
 def credential_input(params):
     try:
