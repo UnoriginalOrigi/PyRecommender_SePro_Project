@@ -29,8 +29,12 @@ def encryptText(data, params):
 
 def decryptText(data, params):
     iv,ct = data[:24],data[24:]
-    cipher = AES.new(b64decode(params["key"].encode('utf-8')), AES.MODE_CBC, iv=b64decode(iv.encode('utf-8')))
-    ct = b64decode(ct.encode('utf-8'))#decoding ciphertext from BASE64
-    pt = cipher.decrypt(ct)
-    pt = Padding.unpad(pt, BLOCK_SIZE).decode('utf-8')
+    try:
+        cipher = AES.new(b64decode(params["key"].encode('utf-8')), AES.MODE_CBC, iv=b64decode(iv.encode('utf-8')))
+        ct = b64decode(ct.encode('utf-8'))#decoding ciphertext from BASE64
+        pt = cipher.decrypt(ct)
+        pt = Padding.unpad(pt, BLOCK_SIZE).decode('utf-8')
+    except ValueError:
+        print("Invalid values for key or IV")
+        pt = ""
     return pt
