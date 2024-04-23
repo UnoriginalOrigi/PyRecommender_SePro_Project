@@ -2,7 +2,7 @@ import os
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
 from util.MyAES import generateKey, loadKey
-from util.credential_manager import credential_input, credential_loader
+from util.credential_manager import credential_input, credential_loader, login_attempt
 from util.general_func import clean_up, cls, action_input, related_artists_search
 import re
 
@@ -50,10 +50,7 @@ def CLI_program():
             if not os.path.exists("client_info.txt") and not os.path.exists(".cache"):
                 client_id, client_secret = credential_input(params=params)
             try:
-                auth_manager = SpotifyClientCredentials(client_id=client_id,client_secret=client_secret)
-                auth_manager.get_access_token(as_dict=False) #test to see if login was successful
-                sp = spotipy.Spotify(auth_manager=auth_manager)
-                print("Login Successful.")
+                sp = login_attempt(client_id, client_secret)
                 while True:
                     print("1 - Song/Artist search, 2 - Recommend similar artists")
                     action = input()

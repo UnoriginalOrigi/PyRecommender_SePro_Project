@@ -1,6 +1,8 @@
 from util.MyAES import encryptText, decryptText
 import re
 from getpass import getpass
+import spotipy
+from spotipy.oauth2 import SpotifyClientCredentials
 
 #input validation constants
 EXPECTED_INPUT_LENGTH = 32
@@ -45,3 +47,10 @@ def credential_loader(params):
         client_secret = client_secret.strip()
         client_secret = decryptText(client_secret, params=params)
     return client_id, client_secret
+
+def login_attempt(client_id,client_secret):
+    auth_manager = SpotifyClientCredentials(client_id=client_id,client_secret=client_secret)
+    auth_manager.get_access_token(as_dict=False) #test to see if login was successful
+    sp = spotipy.Spotify(auth_manager=auth_manager)
+    print("Login Successful.")
+    return sp
