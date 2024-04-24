@@ -11,7 +11,7 @@ Error Codes:
 """
 
 def main():
-    print("1 - CLI implementation; 2 - Visual interface")
+    print("1 - CLI; 2 - TKinter interface")
     action = action_input()
     if action == 1:
         CLI_program()
