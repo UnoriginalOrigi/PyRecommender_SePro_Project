@@ -3,10 +3,8 @@ import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
 from util.MyAES import generateKey, loadKey
 from util.credential_manager import credential_input, credential_loader, login_attempt
-from util.general_func import clean_up, cls, action_input, related_artists_search
+from util.general_func import clean_up, cls, action_input, related_artists_search, INPUT_SIZE
 import re
-
-INPUT_SIZE = 64
 
 def CLI_program():
     print("Welcome to the Spotify Recommender CLI!")

@@ -1,8 +1,12 @@
 from tkinter import *
 from tkinter import ttk
+from tkinter.constants import DISABLED, NORMAL, SINGLE
+import os
+import re
 import spotipy
-from util.credential_manager import EXPECTED_INPUT_LENGTH,login_attempt
-from util.general_func import clean_up, related_artists_search
+from util.credential_manager import EXPECTED_INPUT_LENGTH,login_attempt,credential_loader
+from util.general_func import clean_up, related_artists_search, INPUT_SIZE
+from util.MyAES import loadKey
 
 #Button size 75x25
 
@@ -19,9 +23,19 @@ class __Login_Window:
         self.master.update()
 
         self.button1 = ttk.Button(self.frame, text="Login", command=self.__login_window)
-        self.button1.place(x=5, y=self.frame.winfo_height()-30)
         self.button2 = ttk.Button(self.frame, text="Quit", command=self.master.destroy)
-        self.button2.place(x=self.frame.winfo_width()-80, y=self.frame.winfo_height()-30)
+        self.button3 = ttk.Button(self.frame, text="Load Saved Details", command=self.__saved_login,state=DISABLED)
+        if os.path.exists("client_info.txt"):
+            self.button3['state'] = NORMAL
+            self.label3 = ttk.Label(self.frame, text="Saved Details Found")
+        else:
+            self.label3 = ttk.Label(self.frame, text="No Saved Details")
+
+        self.button1.place(x=self.frame.winfo_width()-80, y=self.frame.winfo_height()-30)
+        self.button2.place(x=5, y=self.frame.winfo_height()-30)
+        self.label3.place(x=self.frame.winfo_height()/2-50, y=self.frame.winfo_height()-52)
+        self.button3.place(x=self.frame.winfo_height()/2-50, y=self.frame.winfo_height()-30)
+
         self.master.update()
 
         self.label1 = ttk.Label(self.frame, text="Client ID")
@@ -53,6 +67,16 @@ class __Login_Window:
 
     def get_login_status(self):
          return self.__logged_in, self.sp
+    
+    def __saved_login(self):
+        params = loadKey()
+        client_id, client_secret = credential_loader(params)
+        try:
+            self.sp = login_attempt(client_id,client_secret)
+            self.__logged_in = True
+            self.master.destroy()
+        except spotipy.oauth2.SpotifyOauthError:
+                print("Invalid Credentials Given, failed to connect")
 
 class __Program_Window:
     def __init__(self,root,sp):
@@ -65,20 +89,66 @@ class __Program_Window:
         self.frame.pack()
         self.master.update()
 
-        self.Lb1 = Listbox(self.frame,width=90,height=40)
+        self.Lb1 = Listbox(self.frame,width=45,height=40,selectmode=SINGLE)
+        self.Lb2 = Listbox(self.frame,width=65,height=40)
         self.Lb1.place(x=5, y=5)
-        #print(self.Lb1.curselection())
+        self.Lb2.place(x=self.frame.winfo_width()/2-50, y=5)
+
+        self.label1 = ttk.Label(self.frame, text="Search Input ")
+        self.entry_text1 = StringVar()
+        self.entry1 = ttk.Entry(self.frame,width=30,textvariable=self.entry_text1)
+        self.entry_text1.trace_add("write", lambda *args: self.__character_limit(self.entry_text1))
+        self.label1.place(x=self.frame.winfo_width()-280, y=self.frame.winfo_height()-48)
+        self.entry1.place(x=self.frame.winfo_width()-280, y=self.frame.winfo_height()-30)
 
         self.button1 = ttk.Button(self.frame, text="Find", command=self.__related_artists)
-        self.button1.place(x=5, y=self.frame.winfo_height()-30)
+        self.button2 = ttk.Button(self.frame, text="Quit", command=self.master.destroy)
+        self.button3 = ttk.Button(self.frame, text=">", width=5, command=self.__get_cursor_songs, state=DISABLED)
+        self.button4 = ttk.Button(self.frame, text="<", width=5, command=self.__get_related_artists, state=DISABLED)
+        self.button1.place(x=self.frame.winfo_width()-80, y=self.frame.winfo_height()-30)
+        self.button2.place(x=5, y=self.frame.winfo_height()-30)
+        self.button3.place(x=self.frame.winfo_width()/2-105, y=self.frame.winfo_height()/2-130)
+        self.button4.place(x=self.frame.winfo_width()/2-105, y=self.frame.winfo_height()/2-70)
 
-    def __get_cursor(self):
-        print(self.Lb1.get(self.Lb1.curselection()[0]))
-        print(self.Lb1.size())
+    def __get_related_artists(self):
+        try:
+            self.button4['state'] = NORMAL
+            search_query = re.search("(?<=~ ).*?(?= &)",self.Lb2.get(self.Lb2.curselection()[0]))
+            try:
+                search_query = search_query.group(0)
+            except AttributeError:
+                search_query = re.search("(~ .+)",self.Lb2.get(self.Lb2.curselection()[0]))
+                search_query = search_query.group(0)[2:]
+            results = related_artists_search(self.sp,search_query)
+            self.Lb1.delete(0,END)
+            for idx, artist in enumerate(results['artists']):
+                self.Lb1.insert(idx+1,artist['name'])
+        except IndexError:
+            pass
+
+    def __get_cursor_songs(self):
+        try:
+            self.button4['state'] = NORMAL
+            results = self.sp.search(q=self.Lb1.get(self.Lb1.curselection()[0]), limit=20)
+            self.Lb2.delete(0,END)
+            for idx, track in enumerate(results['tracks']['items']):
+                temp = "{} ~ {}".format(track['name'], track['artists'][0]['name'])
+                if len(track['artists']) > 1:
+                    for i in range(1, len(track['artists'])):
+                        temp = "{} & {}".format(temp, track['artists'][i]['name'])
+                self.Lb2.insert(idx+1,temp)
+        except IndexError:
+            pass
+
+    def __character_limit(self, txt_entry):
+        if len(txt_entry.get()) > INPUT_SIZE:
+            txt_entry.set(txt_entry.get()[:INPUT_SIZE])
+
 
     def __related_artists(self):
-        related_artists = related_artists_search(self.sp,"Linkin Park")
+        related_artists = related_artists_search(self.sp,self.entry1.get())
         self.Lb1.delete(0,END)
+        self.button3['state'] = NORMAL
         for idx, artist in enumerate(related_artists['artists']):
             self.Lb1.insert(idx+1,artist['name'])
 

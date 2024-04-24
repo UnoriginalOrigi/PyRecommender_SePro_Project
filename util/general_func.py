@@ -1,5 +1,7 @@
 import os
 
+INPUT_SIZE = 64
+
 def cls(): #command line clearing, purely aesthetic
     os.system('cls' if os.name=='nt' else 'clear')
 
@@ -14,7 +16,6 @@ def action_input():
         cls()
         print("Error 1: Input is not a valid integer")
         action = -1
-
     return action
 
 def related_artists_search(sp, search_query):

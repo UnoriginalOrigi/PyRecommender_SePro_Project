@@ -2,7 +2,6 @@ from CLI_implementation import CLI_program
 from tkinter_implementation import tkinter_program
 from util.general_func import cls, clean_up, action_input
 
-
 """
 Error Codes:
 1. Expected integer, received invalid input
