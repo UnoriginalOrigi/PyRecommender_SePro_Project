@@ -56,7 +56,10 @@ def CLI_program():
                         while True:
                             search_query = input("Enter search query: ")
                             if len(search_query) > INPUT_SIZE:
+                                search_query = ""
                                 print("Input too long. Input size <=",INPUT_SIZE)
+                            elif len(search_query) == 0:
+                                print("No Input given")
                             else:
                                 break
                         results = sp.search(q=search_query, limit=10)
@@ -73,7 +76,15 @@ def CLI_program():
                         else:
                             print("Invalid input")    
                     elif action == "2":
-                        search_query = input("Enter an Artist: ")
+                        while True:
+                            search_query = input("Enter an Artist: ")
+                            if len(search_query) > INPUT_SIZE:
+                                search_query = ""
+                                print("Input too long. Input size <=",INPUT_SIZE)
+                            elif len(search_query) == 0:
+                                print("No Input given")
+                            else:
+                                break
                         related_artists = related_artists_search(sp, search_query)
                         future_lookup = []
                         for idx, artist in enumerate(related_artists['artists']):

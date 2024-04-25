@@ -95,6 +95,7 @@ class __Program_Window:
         self.Lb2.place(x=self.frame.winfo_width()/2-50, y=5)
 
         self.label1 = ttk.Label(self.frame, text="Search Input ")
+        self.label2 = ttk.Label(self.frame, text="Invalid Input ",state=DISABLED)
         self.entry_text1 = StringVar()
         self.entry1 = ttk.Entry(self.frame,width=30,textvariable=self.entry_text1)
         self.entry_text1.trace_add("write", lambda *args: self.__character_limit(self.entry_text1))
@@ -146,11 +147,15 @@ class __Program_Window:
 
 
     def __related_artists(self):
-        related_artists = related_artists_search(self.sp,self.entry1.get())
-        self.Lb1.delete(0,END)
-        self.button3['state'] = NORMAL
-        for idx, artist in enumerate(related_artists['artists']):
-            self.Lb1.insert(idx+1,artist['name'])
+        if len(self.entry1.get()) > 0 and len(self.entry1.get()) < INPUT_SIZE:
+            self.label2.place_forget()
+            related_artists = related_artists_search(self.sp,self.entry1.get())
+            self.Lb1.delete(0,END)
+            self.button3['state'] = NORMAL
+            for idx, artist in enumerate(related_artists['artists']):
+                self.Lb1.insert(idx+1,artist['name'])
+        else:
+            self.label2.place(x=self.frame.winfo_width()-200, y=self.frame.winfo_height()-48)
 
 def tkinter_program():
     root = Tk(screenName="Login PyRecommender",baseName="Login PyRecommender",className="Login PyRecommender")
