@@ -21,6 +21,7 @@ def main():
 
 if __name__ == "__main__":
     cls()
+    clean_up()
     try:
         main()
     except KeyboardInterrupt:

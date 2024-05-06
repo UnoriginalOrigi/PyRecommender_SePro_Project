@@ -8,7 +8,7 @@ from spotipy.oauth2 import SpotifyClientCredentials
 EXPECTED_INPUT_LENGTH = 32
 BASE62_INVALID_SYMBOLS = "[^A-Za-z0-9]"
 
-def credential_input(params):
+def credential_input(params): #Adding credentials and input validation
     try:
         print("Input your client id token:")
         client_id_input = input()
@@ -38,7 +38,7 @@ def credential_input(params):
     
     return client_id, client_secret
 
-def credential_loader(params):
+def credential_loader(params): #Loads previously saved encrypted credentials
     with open("client_info.txt","r") as f:
         client_id = f.readline()
         client_id = client_id.strip()
@@ -47,7 +47,7 @@ def credential_loader(params):
         client_secret = decryptText(client_secret, params=params)
     return client_id, client_secret
 
-def login_attempt(client_id,client_secret):
+def login_attempt(client_id,client_secret): #Attempt to login to Spotify API with provided client_id and client_secret 
     auth_manager = SpotifyClientCredentials(client_id=client_id,client_secret=client_secret)
     auth_manager.get_access_token(as_dict=False) #test to see if login was successful
     sp = spotipy.Spotify(auth_manager=auth_manager)

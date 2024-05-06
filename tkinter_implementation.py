@@ -62,13 +62,13 @@ class __Login_Window:
 
     def __login_window(self):
         if len(self.entry1.get()) < EXPECTED_INPUT_LENGTH or len(self.entry2.get()) < EXPECTED_INPUT_LENGTH:
-            self.label4.config(text="Invalid Credentials. Input too short.")
+            self.label4.config(text="Invalid Credentials. Input too short.") #Credentials wrong length
         else:
             try:
                 self.sp = login_attempt(self.entry1.get(),self.entry2.get())
                 self.__logged_in = True
                 self.master.destroy()
-            except spotipy.oauth2.SpotifyOauthError:
+            except spotipy.oauth2.SpotifyOauthError: #Invalid credentials
                 self.label4.config(text="Invalid Credentials. Check Credentials")
                 self.label4.place()
 
@@ -83,7 +83,7 @@ class __Login_Window:
             self.__logged_in = True
             self.master.destroy()
         except spotipy.oauth2.SpotifyOauthError:
-            self.label4.config(text="Invalid Credentials. File Corrupted or Key Invalid")
+            self.label4.config(text="Invalid Credentials. File Corrupted or Key Invalid") #Unable to decrypt
             self.label4.place()
 
 class __Program_Window:
@@ -98,7 +98,7 @@ class __Program_Window:
         self.master.update()
 
         self.Lb1 = Listbox(self.frame,width=45,height=40,selectmode=SINGLE)
-        self.Lb2 = Listbox(self.frame,width=65,height=40)
+        self.Lb2 = Listbox(self.frame,width=65,height=40,selectmode=SINGLE)
         self.Lb1.place(x=5, y=5)
         self.Lb2.place(x=self.frame.winfo_width()/2-50, y=5)
 
@@ -133,7 +133,7 @@ class __Program_Window:
     def __get_related_artists(self):
         try:
             self.button4['state'] = NORMAL
-            search_query = re.search("(?<=~ ).*?(?= &)",self.Lb2.get(self.Lb2.curselection()[0]))
+            search_query = re.search("(?<=~ ).*?(?= &)",self.Lb2.get(self.Lb2.curselection()[0])) #Input cleaning
             try:
                 search_query = search_query.group(0)
             except AttributeError:
@@ -150,7 +150,7 @@ class __Program_Window:
         try:
             self.button4['state'] = NORMAL
             #self.button5['state'] = NORMAL
-            search_query = re.search("(?<=~ ).*?(?= &)",self.Lb1.get(self.Lb1.curselection()[0]))
+            search_query = re.search("(?<=~ ).*?(?= &)",self.Lb1.get(self.Lb1.curselection()[0])) #Input cleaning
             try:
                 search_query = search_query.group(0)
             except AttributeError:
@@ -171,12 +171,12 @@ class __Program_Window:
             pass
 
     def __character_limit(self, txt_entry):
-        if len(txt_entry.get()) > INPUT_SIZE:
+        if len(txt_entry.get()) > INPUT_SIZE: #Implemented Char limit
             txt_entry.set(txt_entry.get()[:INPUT_SIZE])
 
     def __related_search(self):
         print(self.dropbox_text.get())
-        if len(self.entry1.get()) > 0 and len(self.entry1.get()) < INPUT_SIZE:
+        if len(self.entry1.get()) > 0 and len(self.entry1.get()) < INPUT_SIZE: #Input Length Validation
             self.label2.place_forget()
             self.Lb1.delete(0,END)
             if(self.dropbox_text.get() == "Artist"):

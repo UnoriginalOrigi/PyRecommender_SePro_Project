@@ -44,7 +44,7 @@ def CLI_program():
                         client_id, client_secret = credential_input(params=params)
                         break
                     else:
-                        print("Invalid input")
+                        print("Invalid input") # Input Validation
             if not os.path.exists("client_info.txt") and not os.path.exists(".cache"):
                 client_id, client_secret = credential_input(params=params)
             try:
@@ -55,7 +55,7 @@ def CLI_program():
                     if action == "1":
                         while True:
                             search_query = input("Enter search query: ")
-                            if len(search_query) > INPUT_SIZE:
+                            if len(search_query) > INPUT_SIZE: # Input Validation
                                 search_query = ""
                                 print("Input too long. Input size <=",INPUT_SIZE)
                             elif len(search_query) == 0:
@@ -78,9 +78,9 @@ def CLI_program():
                     elif action == "2":
                         while True:
                             search_query = input("Enter an Artist: ")
-                            if len(search_query) > INPUT_SIZE:
+                            if len(search_query) > INPUT_SIZE: # Input Validation
                                 search_query = ""
-                                print("Input too long. Input size <=",INPUT_SIZE)
+                                print("Input too long. Input size <=",INPUT_SIZE) 
                             elif len(search_query) == 0:
                                 print("No Input given")
                             else:
@@ -96,7 +96,7 @@ def CLI_program():
                                 action = "y"
                             if action == "y":
                                 id_search = input("Type in the ID of the artist: ")
-                                if not re.findall("[^0-9]",id_search) and int(id_search) <= 20:
+                                if not re.findall("[^0-9]",id_search) and int(id_search) <= 20: # Input Validation
                                     id_search = "artist:"+future_lookup[int(id_search)-1]
                                     results = sp.search(q=id_search, limit=10)
                                     for idx, track in enumerate(results['tracks']['items']):
@@ -132,7 +132,7 @@ def CLI_program():
                             break
                         else:
                             print("Invalid input") 
-            except spotipy.oauth2.SpotifyOauthError:
+            except spotipy.oauth2.SpotifyOauthError: #Authentication invalid
                 print("Invalid Credentials Given, failed to connect")
         elif action == -1:
             print("Error encountered")
