@@ -6,7 +6,7 @@ import re
 import spotipy
 from util.credential_manager import EXPECTED_INPUT_LENGTH,login_attempt,credential_loader
 from util.general_func import clean_up, related_artists_search, INPUT_SIZE
-from util.MyAES import loadKey
+from util.MyAES import loadKey, generateKey
 
 #Button size 75x25
 
@@ -65,7 +65,11 @@ class __Login_Window:
             self.label4.config(text="Invalid Credentials. Input too short.") #Credentials wrong length
         else:
             try:
-                self.sp = login_attempt(self.entry1.get(),self.entry2.get())
+                if(os.path.exists("key.json")):
+                    params = loadKey()
+                else:
+                    params = generateKey()
+                self.sp = login_attempt(self.entry1.get(),self.entry2.get(),params=params)
                 self.__logged_in = True
                 self.master.destroy()
             except spotipy.oauth2.SpotifyOauthError: #Invalid credentials
@@ -79,7 +83,7 @@ class __Login_Window:
         params = loadKey()
         client_id, client_secret = credential_loader(params)
         try:
-            self.sp = login_attempt(client_id,client_secret)
+            self.sp = login_attempt(client_id,client_secret,params=params)
             self.__logged_in = True
             self.master.destroy()
         except spotipy.oauth2.SpotifyOauthError:

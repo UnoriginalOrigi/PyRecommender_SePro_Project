@@ -41,14 +41,14 @@ def CLI_program():
                             break
                     elif input_action == 'n':
                         cls()
-                        client_id, client_secret = credential_input(params=params)
+                        client_id, client_secret = credential_input()
                         break
                     else:
                         print("Invalid input") # Input Validation
             if not os.path.exists("client_info.txt") and not os.path.exists(".cache"):
-                client_id, client_secret = credential_input(params=params)
+                client_id, client_secret = credential_input()
             try:
-                sp = login_attempt(client_id, client_secret)
+                sp = login_attempt(client_id, client_secret,params=params)
                 while True:
                     print("1 - Song/Artist search, 2 - Recommend similar artists")
                     action = input()
