@@ -112,11 +112,11 @@ class __Program_Window:
         self.label1.place(x=self.frame.winfo_width()-280, y=self.frame.winfo_height()-48)
         #self.label3.place(x=5, y=self.frame.winfo_height()-48)
 
-        self.dropbox_options = ["Artist","Song"]
+        self.dropbox_options = ["Related Artist","Specific Song/Artist"]
         self.dropbox_text = StringVar()
-        self.dropbox_text.set("Artist")
+        self.dropbox_text.set("Related Artist")
         self.dropbox1 = OptionMenu(self.master,self.dropbox_text,*self.dropbox_options)
-        self.dropbox1.place(x=self.frame.winfo_width()-360, y=self.frame.winfo_height()-44)
+        self.dropbox1.place(x=self.frame.winfo_width()/2-50, y=self.frame.winfo_height()-44)
 
         self.entry_text1 = StringVar()
         self.entry1 = ttk.Entry(self.frame,width=30,textvariable=self.entry_text1)
@@ -179,13 +179,12 @@ class __Program_Window:
             txt_entry.set(txt_entry.get()[:INPUT_SIZE])
 
     def __related_search(self):
-        print(self.dropbox_text.get())
         if len(self.entry1.get()) > 0 and len(self.entry1.get()) < INPUT_SIZE: #Input Length Validation
+            self.button3['state'] = NORMAL
             self.label2.place_forget()
             self.Lb1.delete(0,END)
-            if(self.dropbox_text.get() == "Artist"):
+            if(self.dropbox_text.get() == "Related Artist"):
                 related_artists = related_artists_search(self.sp,self.entry1.get())
-                self.button3['state'] = NORMAL
                 for idx, artist in enumerate(related_artists['artists']):
                     self.Lb1.insert(idx+1,artist['name'])
             else:
