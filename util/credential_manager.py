@@ -32,6 +32,10 @@ def credential_input(): #Adding credentials and input validation
         print("Error 3: Invalid Base62 characters detected")
         client_id = "-1"
         client_secret = "-1"
+    except TypeError: #Input validation
+        print ("Error 4: Input is invalid format")
+        client_id = "-1"
+        client_secret = "-1"
     
     return client_id, client_secret
 
