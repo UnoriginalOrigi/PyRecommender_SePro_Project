@@ -179,7 +179,7 @@ class __Program_Window:
             txt_entry.set(txt_entry.get()[:INPUT_SIZE])
 
     def __related_search(self):
-        if len(self.entry1.get()) > 0 and len(self.entry1.get()) < INPUT_SIZE: #Input Length Validation
+        if not self.entry1.get().isspace() and len(self.entry1.get()) > 0 and len(self.entry1.get()) < INPUT_SIZE: #Input Length Validation
             self.button3['state'] = NORMAL
             self.label2.place_forget()
             self.Lb1.delete(0,END)
