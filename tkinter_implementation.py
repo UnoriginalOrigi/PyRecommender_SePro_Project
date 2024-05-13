@@ -89,6 +89,8 @@ class __Login_Window:
         except spotipy.oauth2.SpotifyOauthError:
             self.label4.config(text="Invalid Credentials. File Corrupted or Key Invalid") #Unable to decrypt
             self.label4.place()
+            self.button3['state'] = DISABLED
+            self.label3.config(text="File Corrupted")
 
 class __Program_Window:
     def __init__(self,root,sp):

@@ -1,4 +1,4 @@
-client_info.txt
+*client_info*
 .cache
 __pycache__
 *.json

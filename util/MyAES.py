@@ -16,9 +16,13 @@ def generateKey():
     return json.loads(params)
 
 def loadKey():
-    with open("key.json","r") as file_i:
-        params = json.load(file_i)
-    return json.loads(params)
+    try:
+        with open("key.json","r") as file_i:
+            params = json.load(file_i)
+        return json.loads(params)
+    except FileNotFoundError:
+        print("File corrupted or could not be read.")
+        return -1
 
 def encryptText(data, params):
     data = Padding.pad(bytes(data,"utf-8"), BLOCK_SIZE)

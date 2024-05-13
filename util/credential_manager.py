@@ -36,13 +36,16 @@ def credential_input(): #Adding credentials and input validation
     return client_id, client_secret
 
 def credential_loader(params): #Loads previously saved encrypted credentials
-    with open("client_info.txt","r") as f:
-        client_id = f.readline()
-        client_id = client_id.strip()
-        client_secret = f.readline()
-        client_secret = client_secret.strip()
-        client_secret = decryptText(client_secret, params=params)
-    return client_id, client_secret
+    try:
+        with open("client_info.txt","r") as f:
+            client_id = f.readline()
+            client_id = client_id.strip()
+            client_secret = f.readline()
+            client_secret = client_secret.strip()
+            client_secret = decryptText(client_secret, params=params)
+        return client_id, client_secret
+    except FileNotFoundError:
+        return "", ""
 
 def login_attempt(client_id,client_secret, params): #Attempt to login to Spotify API with provided client_id and client_secret 
     auth_manager = SpotifyClientCredentials(client_id=client_id,client_secret=client_secret)

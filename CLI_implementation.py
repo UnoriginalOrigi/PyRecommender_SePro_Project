@@ -33,7 +33,7 @@ def CLI_program():
                         print("Using saved credentials")
                         client_id, client_secret = credential_loader(params=params)
                         if client_secret == "":
-                            print("Saved credentials corrupted. Removing file.")
+                            print("Saved credentials corrupted.")
                             if(os.path.exists("client_info.txt")):
                                 os.remove("client_info.txt")
                             break
