@@ -60,6 +60,8 @@ def CLI_program():
                                 print("Input too long. Input size <=",INPUT_SIZE)
                             elif len(search_query) == 0:
                                 print("No Input given")
+                            elif search_query.isspace():
+                                print("Input is only whitespaces")
                             else:
                                 break
                         results = sp.search(q=search_query, limit=10)
@@ -96,25 +98,29 @@ def CLI_program():
                                 action = "y"
                             if action == "y":
                                 id_search = input("Type in the ID of the artist: ")
-                                if not re.findall("[^0-9]",id_search) and int(id_search) <= 20: # Input Validation
+                                if not id_search == "" and not re.findall("[^0-9]",id_search) and int(id_search) <= 20: # Input Validation
                                     id_search = "artist:"+future_lookup[int(id_search)-1]
                                     results = sp.search(q=id_search, limit=10)
                                     for idx, track in enumerate(results['tracks']['items']):
                                         print(idx+1, track['name'], "-", track['artists'][0]['name'])
                                 else:
                                     print("Invalid input")
-                                action = input("Another? ([y]/n) ").lower()
-                                if action == "":
-                                    action = "y"
-                                if action == "y":
-                                    cls()
-                                    for i in range(0,len(future_lookup)):
-                                        print(i+1, future_lookup[i])
-                                elif action == "n":
-                                    cls()
+                                while True:
+                                    action = input("Another? ([y]/n) ").lower()
+                                    if action == "":
+                                        action = "y"
+                                    if action == "y":
+                                        cls()
+                                        for i in range(0,len(future_lookup)):
+                                            print(i+1, future_lookup[i])
+                                        break
+                                    elif action == "n":
+                                        cls()
+                                        break
+                                    else:
+                                        print("Invalid input") 
+                                if action == "n":
                                     break
-                                else:
-                                    print("Invalid input") 
 
                             elif action == "n":
                                 cls()
